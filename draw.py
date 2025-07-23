@@ -2,7 +2,6 @@ import random
 import pygame
 import cv2
 
-# Emotion → color mapping
 EMOTION_COLOR_MAP = {
     'happy': (255, 190, 130),
     'neutral': (99, 142, 168),
@@ -37,7 +36,6 @@ class engine:
         secondary_color = EMOTION_COLOR_MAP.get(secondary_emotion, EMOTION_COLOR_MAP['None'])
         noise = 0.05 * finger_count  # Reduced pixel-level chaos
 
-        # Resize and grayscale
         small = cv2.resize(frame, (self.grid_cols, self.grid_rows))
         gray = cv2.cvtColor(small, cv2.COLOR_BGR2GRAY)
 
@@ -46,17 +44,14 @@ class engine:
                 pixel_val = gray[y, x]
                 char = self.brightness_to_char(pixel_val)
 
-                # Add smaller noise to position (based on finger_count)
                 dx = random.uniform(-noise, noise) * self.char_w
                 dy = random.uniform(-noise, noise) * self.char_h
 
-                # 70% chance for primary color, 30% for secondary
                 if random.random() < 0.7:
                     base_color = primary_color
                 else:
                     base_color = secondary_color
 
-                # Reduced color jitter per character
                 color = tuple(min(255, max(0, c + random.randint(-5, 5))) for c in base_color)
                 text = self.font.render(char, True, color)
                 screen.blit(text, (x * self.char_w + dx, y * self.char_h + dy))
