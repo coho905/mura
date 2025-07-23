@@ -24,17 +24,14 @@ class hand_detection:
         hand_landmarks = results.multi_hand_landmarks[0]
         lm = hand_landmarks.landmark
 
-        # Finger tip indices in MediaPipe
         tip_ids = [4, 8, 12, 16, 20]
         fingers = []
 
-        # Thumb: compare x-coordinates instead of y
         if lm[tip_ids[0]].x < lm[tip_ids[0] - 1].x:
             fingers.append(1)
         else:
             fingers.append(0)
 
-        # Other fingers: compare y-coordinates of tip and pip
         for id in range(1, 5):
             if lm[tip_ids[id]].y < lm[tip_ids[id] - 2].y:
                 fingers.append(1)
